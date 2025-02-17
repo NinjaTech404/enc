@@ -15,7 +15,7 @@ A lightweight C++ encoding and decoding toolkit supporting **Base32, Base64, Hex
 ## Installation
 Clone the repository:
 ```sh
-git clone https://github.com/HorizonArch/enc.git
+git clone https://github.com/NinjaTech404/enc.git
 cd enc
 ```
 ## How to use it
