@@ -27,7 +27,7 @@ g++ app.cpp -o enc
 For Windows:
 ```PS
 g++ app.cpp -o enc
-./enc <base64/base32/hex/caesar/binary> <encode/decode> <value>
+.\enc <base64/base32/hex/caesar/binary> <encode/decode> <value>
 ```
 
 
