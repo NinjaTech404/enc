@@ -16,7 +16,7 @@ add_executable(enc ${MAIN})
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/include)
-include_directories(${CMAKE_SOURCE_DIR}/include/CLI11)
+include_directories(${CMAKE_SOURCE_DIR}/include/CLI)
 add_subdirectory(${CMAKE_SOURCE_DIR}/include/fmt)
 add_subdirectory(${CMAKE_SOURCE_DIR}/include/termcolor)
 

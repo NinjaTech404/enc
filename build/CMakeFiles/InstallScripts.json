@@ -1,0 +1,9 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/paradox/Projects/enc/build/cmake_install.cmake",
+		"/home/paradox/Projects/enc/build/include/fmt/cmake_install.cmake",
+		"/home/paradox/Projects/enc/build/include/termcolor/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

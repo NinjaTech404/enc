@@ -1,33 +1,61 @@
-# Encoding Toolkit (C++)
+# ENC - C++ Encode/Decode CLI Toolkit
 
-A lightweight C++ encoding and decoding toolkit supporting **Base32, Base64, Hex, Binary, and Caesar cipher**. Designed for cryptography, data transformation, and encoding experiments with efficient implementations.
+A simple and straightforward C++ command-line interface toolkit for everyday encoding and decoding tasks.
 
 ## Features
-✔ Supports multiple encoding schemes:
-  - Base32  
-  - Base64  
-  - Hexadecimal  
-  - Binary  
-  - Caesar cipher  
-✔ Written in **C++** for high performance  
-✔ Simple and easy-to-use API  
 
-## Installation
-Clone the repository:
-```sh
-git clone https://github.com/NinjaTech404/enc.git
+- Command-line interface for encoding/decoding operations
+- Built with modern C++20 standards
+- Cross-platform compatibility
+- Colorful terminal output using termcolor
+- User-friendly formatting with fmt library
+
+## Requirements
+
+- CMake (version 3.10 to 4.1.2)
+- C++20 compatible compiler
+- fmt library (included as subdirectory)
+- termcolor library (included as subdirectory)
+
+## Building
+
+```bash
+# Clone the repository
+git clone https://github.com/NinjaTech404/enc
 cd enc
-```
-## How to use it
-For Linux:
-```sh
-g++ app.cpp -o enc
-./enc <base64/base32/hex/caesar/binary> <encode/decode> <value>
-```
-For Windows:
-```PS
-g++ app.cpp -o enc
-.\enc <base64/base32/hex/caesar/binary> <encode/decode> <value>
+
+# Build the project
+mkdir build && cd build
+cmake ..
+make
 ```
 
+## Project Structure
 
+```
+enc/
+├── src/           # Source files
+├── include/       # Header files and dependencies
+│   ├── CLI/      # Command-line interface headers
+│   ├── fmt/      # Formatting library
+│   └── termcolor/ # Terminal color library
+└── CMakeLists.txt # Build configuration
+```
+
+## Usage
+
+After building, run the executable:
+```bash
+./enc [options]
+```
+
+## Dependencies
+
+- **fmt**: Modern formatting library (included)
+- **termcolor**: Cross-platform terminal color handling (included)
+
+## License
+
+This project was made with CMake by NinjaTech404.
+
+For more information, visit: https://github.com/NinjaTech404/enc
