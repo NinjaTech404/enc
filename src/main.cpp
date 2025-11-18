@@ -6,6 +6,8 @@
 #include<string>
 #include<iostream>
 #include<convert/convert.hpp>
+#include<hash_library/md5.h>
+#include<hash_library/md5.cpp>
 int main (int argc, char ** argv){
   CLI::App app("A C++ CLI toolkit for Encoding/Decoding Data\nAlso vist \e[36mhttps://github.com/NinjaTech404/enc\e[0m"); // initializing the CLI App Flags/Options
   app.get_formatter()->right_column_width(80); // -> adjusting the help output layout
@@ -54,6 +56,8 @@ int main (int argc, char ** argv){
   caesar_option->excludes(binary_f, hex_f, base32_f, base64_f, enc_f, dec_f);
   caesar_f->needs(caesar_option);
   caesar_option->needs(caesar_f);
+
+  // ==> dgst flags 
   // ==> CLI App parser
   CLI11_PARSE(app, argc, argv); //Flags/Options Parser
   
@@ -101,7 +105,7 @@ int main (int argc, char ** argv){
     using namespace termcolor;
     std::cout << yellow << bold << underline << "File formating is not availabe at this time" << reset << std::endl;
     return -1;
-
+     
   }
   return 0;
 }
