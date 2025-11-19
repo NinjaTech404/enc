@@ -46,7 +46,7 @@ enc/
 
 After building, run the executable:
 ```bash
-./enc [options]
+./enc -h
 ```
 
 ## Dependencies
