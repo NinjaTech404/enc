@@ -4,7 +4,7 @@
 
   <h3>ENC</h3>
 
-  A simple and straightforward C++ command-line interface toolkit for everyday encoding and decoding tasks.
+  C++ CLI encoder/decoder for daily use.
   <br>
   <strong>[Explore ENC docs »][wiki-link]</strong>
   <br>
@@ -124,7 +124,7 @@ This project was created by [NinjaTech404][author-link] using CMake and modern C
 [cmake-link]:         https://github.com/NinjaTech404/enc/blob/main/CMakeLists.txt
 [commits-link]:       https://github.com/NinjaTech404/enc/commits/main
 [discussions-link]:   https://github.com/NinjaTech404/enc/discussions/new
-[enc-logo]:           https://via.placeholder.com/128x128.png?text=ENC
+[enc-logo]:           images/enc.svg
 [github-link]:        https://github.com/NinjaTech404/enc
 [include-link]:       https://github.com/NinjaTech404/enc/tree/main/include
 [issue-link]:         https://github.com/NinjaTech404/enc/issues/new
