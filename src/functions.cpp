@@ -98,3 +98,29 @@ void hash_not_specified(void){
   fmt::print("{:-<41}\n", "");
   fmt::print("\n");
 }
+
+// >======> Reading From File <======<
+std::pair<std::string, bool> read_file (std::string file_name){
+  std::ifstream file(file_name.c_str()); // initilizing the input file dstream object
+  if (!file.is_open()){
+    return std::pair<std::string, bool>(fmt::format("The path ({}) to the file is not found or doesn't exist!", file_name), false);
+  }
+  std::stringstream buffer;
+  buffer << file.rdbuf();
+  file.close();
+  return std::pair<std::string, bool>(std::string(buffer.str()), true);
+
+}
+
+
+// >======> Reading From File <======<
+std::pair<std::string, bool> write_file (std::string file_name, std::string content, std::pair<std::string, std::string> labels){
+  std::ofstream file;
+  file.open(file_name.c_str());
+  if(!file.is_open()){
+    return std::pair<std::string, bool>(fmt::format("Faild to create the file ({})!", file_name), false);
+  }
+  file << BorderFormatter::format(content, 50, '=', labels.first, labels.second);
+  file.close();
+  return std::pair<std::string, bool>(fmt::format("Result has been stored in ({})!", file_name), true);
+}

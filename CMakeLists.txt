@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10...4.1.2)
 
 project(
   ENC
-  VERSION 1.5.0
+  VERSION 2.0.0
   DESCRIPTION "A simple and straight forward c++ Encode/Decode CLI toolkit for everyday use"
   LANGUAGES CXX
 )

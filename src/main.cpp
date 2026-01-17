@@ -50,8 +50,8 @@ int main (int argc, char ** argv){
 
   // ==> dgst options
   std::string dgst_input_option, dgst_output_option;
-  CLI::Option* dgst_input_op = dgst_command->add_option("--input,-i", input_option, "Accept a value (-i <value> or --input=<value>)");
-  dgst_command->add_option("--output,-o", output_option, "Generate the output in a desired file (-o <file> or --output=<file>)")->needs(dgst_input_op);
+  CLI::Option* dgst_input_op = dgst_command->add_option("--input,-i", dgst_input_option, "Accept a value (-i <value> or --input=<value>)");
+  dgst_command->add_option("--output,-o", dgst_output_option, "Generate the output in a desired file (-o <file> or --output=<file>)")->needs(dgst_input_op);
 
   // ==> dgst flags 
   bool dsgt_file_flag(0), md5_flag(0), sha1_flag(0), sha3_flag(0), sha256_flag(0), crc32_flag(0), keccak_flag(0);
@@ -75,77 +75,630 @@ int main (int argc, char ** argv){
   CLI11_PARSE(app, argc, argv); //Flags/Options Parser
   
   /* >=========> subcommands actions <=========< */ 
-  
-  /* >---------> convert command actions <---------< */
-  if(convert_command->parsed()){
-    if(!file_flag){
-      if(binary_flag){
-        if(enc_flag) fmt::print("Binary: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", CONVERT::binary_encode(input_option)));
-        else if(dec_flag) fmt::print("Binary: {}\n", fmt::format(fg(fmt::color::light_green), "{}", CONVERT::binary_decode(input_option))); // Fixed: should be decode
-        else fmt::print("--encode,-e OR --decode,-d flag is required\n");
-      }
-      else if(hex_flag){
-        if(enc_flag) fmt::print("Hex: {}\n\n",fmt::format(fg(fmt::color::light_green), "{}", CONVERT::hex_encode(input_option)));
-        else if(dec_flag) fmt::print("Hex: {}\n",fmt::format(fg(fmt::color::light_green), "{}", CONVERT::hex_decode(input_option)));
-        else fmt::print("--encode,-e OR --decode,-d flag is required\n");
-      }
-      else if(base32_flag){
-        if(enc_flag) fmt::print("Base32: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", CONVERT::base32_encode(input_option)));
-        else if(dec_flag) fmt::print("Base32: {}\n", fmt::format(fg(fmt::color::light_green), "{}", CONVERT::base32_decode(input_option)));
-        else fmt::print("--encode,-e OR --decode,-d flag is required\n");
-      }
-      else if(base64_flag){
-        if(enc_flag) fmt::print("Base64: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", CONVERT::base64_encode(input_option)));
-        else if(dec_flag) fmt::print("Base64: {}\n", fmt::format(fg(fmt::color::light_green), "{}", CONVERT::base64_decode(input_option)));
-        else fmt::print("--encode,-e OR --decode,-d flag is required\n");
-      }
-      else if(caesar_flag){
-        fmt::print("Caesar: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", CONVERT::caesar(input_option, caesar_shift)));
-      }
-      else {
+  std::string output_value = ""; // => Stores the result
+
+  /* >=========> convert command actions <=========< */
+  if(convert_command->parsed()){  
+    std::pair<std::string, bool> file_data = read_file(input_option); // => Stores the content of pathed file
+    /* >---------> Binary <---------< */
+    if(binary_flag){
+        /* >---------> Binary Encoding <---------< */
+        if(enc_flag) { 
+            if(file_flag){
+                using namespace termcolor;
+                if(!file_data.second){
+                    std::cout << red << bold << underline << file_data.first << reset << std::endl; 
+                    return -1;
+                }
+                output_value = CONVERT::binary_encode(file_data.first);
+                if (!output_option.length() == 0){
+                  std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BINARY ENCODED BEGIN","BINARY ENCODED END"));
+                  if (!file_status.second){ 
+                    std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                    fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("BINARY ENCODED BEGIN"), std::string("BINARY ENCODED END")));
+                    return -1;
+                  }
+                  std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                  return 0;
+                }
+                fmt::print("Binary({}): {}\n\n", input_option, fmt::format(fg(fmt::color::light_green), "{}", output_value)); 
+                return 0;
+            }
+            output_value = CONVERT::binary_encode(input_option);
+            if (!output_option.length() == 0){
+                using namespace termcolor;
+                std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BINARY ENCODED BEGIN","BINARY ENCODED END"));
+                if (!file_status.second){ 
+                  std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                  fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("BINARY ENCODED BEGIN"), std::string("BINARY ENCODED END")));
+                  return -1;
+                }
+                std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                return 0;
+            }
+            fmt::print("Binary: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", output_value));
+            return 0;
+        }
+        /* >---------> Binary Decoding <---------< */
+        else if(dec_flag) {
+            if(file_flag){
+                using namespace termcolor;
+                if(!file_data.second){
+                    std::cout << red << bold << underline << file_data.first << reset << std::endl; 
+                    return -1;
+                }
+                output_value = CONVERT::binary_decode(file_data.first);
+                if (!output_option.length() == 0){
+                  std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BINARY DECODED BEGIN","BINARY DECODED END"));
+                  if (!file_status.second){ 
+                    std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                    fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("BINARY DECODED BEGIN"), std::string("BINARY DECODED END")));
+                    return -1;
+                  }
+                  std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                  return 0;
+                }
+                fmt::print("Binary({}): {}\n", input_option, fmt::format(fg(fmt::color::light_green), "{}", output_value)); 
+                return 0;
+            }
+            output_value = CONVERT::binary_decode(input_option);
+            if (!output_option.length() == 0){
+                using namespace termcolor;
+                std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BINARY DECODED BEGIN","BINARY DECODED END"));
+                if (!file_status.second){ 
+                  std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                  fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("BINARY DECODED BEGIN"), std::string("BINARY DECODED END")));
+                  return -1;
+                }
+                std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                return 0;
+            }
+            fmt::print("Binary: {}\n", fmt::format(fg(fmt::color::light_green), "{}", output_value));
+            return 0;
+        }
+        /* >---------> Binary Requirements <---------< */
+        else {
+            fmt::print("--encode,-e OR --decode,-d flag is required\n");
+            return -1;
+        }
+    }
+    
+    /* >---------> Hex <---------< */
+    else if(hex_flag){
+        /* >---------> Hex Encoding <---------< */
+        if(enc_flag) { 
+            if(file_flag){
+                using namespace termcolor;
+                if(!file_data.second){
+                    std::cout << red << bold << underline << file_data.first << reset << std::endl; 
+                    return -1;
+                }
+                output_value = CONVERT::hex_encode(file_data.first);
+                if (!output_option.length() == 0){
+                  std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("HEX ENCODED BEGIN","HEX ENCODED END"));
+                  if (!file_status.second){ 
+                    std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                    fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("HEX ENCODED BEGIN"), std::string("HEX ENCODED END")));
+                    return -1;
+                  }
+                  std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                  return 0;
+                }
+                fmt::print("Hex({}): {}\n\n", input_option, fmt::format(fg(fmt::color::light_green), "{}", output_value)); 
+                return 0;
+            }
+            output_value = CONVERT::hex_encode(input_option);
+            if (!output_option.length() == 0){
+                using namespace termcolor;
+                std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("HEX ENCODED BEGIN","HEX ENCODED END"));
+                if (!file_status.second){ 
+                  std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                  fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("HEX ENCODED BEGIN"), std::string("HEX ENCODED END")));
+                  return -1;
+                }
+                std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                return 0;
+            }
+            fmt::print("Hex: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", output_value));
+            return 0;
+        }
+        /* >---------> Hex Decoding <---------< */
+        else if(dec_flag) {
+            if(file_flag){
+                using namespace termcolor;
+                if(!file_data.second){
+                    std::cout << red << bold << underline << file_data.first << reset << std::endl; 
+                    return -1;
+                }
+                output_value = CONVERT::hex_decode(file_data.first);
+                if (!output_option.length() == 0){
+                  std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("HEX DECODED BEGIN","HEX DECODED END"));
+                  if (!file_status.second){ 
+                    std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                    fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("HEX DECODED BEGIN"), std::string("HEX DECODED END")));
+                    return -1;
+                  }
+                  std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                  return 0;
+                }
+                fmt::print("Hex({}): {}\n", input_option, fmt::format(fg(fmt::color::light_green), "{}", output_value)); 
+                return 0;
+            }
+            output_value = CONVERT::hex_decode(input_option);
+            if (!output_option.length() == 0){
+                using namespace termcolor;
+                std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("HEX DECODED BEGIN","HEX DECODED END"));
+                if (!file_status.second){ 
+                  std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                  fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("HEX DECODED BEGIN"), std::string("HEX DECODED END")));
+                  return -1;
+                }
+                std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                return 0;
+            }
+            fmt::print("Hex: {}\n", fmt::format(fg(fmt::color::light_green), "{}", output_value));
+            return 0;
+        }
+        /* >---------> Hex Requirements <---------< */
+        else {
+            fmt::print("--encode,-e OR --decode,-d flag is required\n");
+            return -1;
+        }
+    }
+    
+    /* >---------> Base32 <---------< */
+    else if(base32_flag){
+        /* >---------> Base32 Encoding <---------< */
+        if(enc_flag) { 
+            if(file_flag){
+                using namespace termcolor;
+                if(!file_data.second){
+                    std::cout << red << bold << underline << file_data.first << reset << std::endl; 
+                    return -1;
+                }
+                output_value = CONVERT::base32_encode(file_data.first);
+                if (!output_option.length() == 0){
+                  std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE32 ENCODED BEGIN","BASE32 ENCODED END"));
+                  if (!file_status.second){ 
+                    std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                    fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("BASE32 ENCODED BEGIN"), std::string("BASE32 ENCODED END")));
+                    return -1;
+                  }
+                  std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                  return 0;
+                }
+                fmt::print("Base32({}): {}\n\n", input_option, fmt::format(fg(fmt::color::light_green), "{}", output_value)); 
+                return 0;
+            }
+            output_value = CONVERT::base32_encode(input_option);
+            if (!output_option.length() == 0){
+                using namespace termcolor;
+                std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE32 ENCODED BEGIN","BASE32 ENCODED END"));
+                if (!file_status.second){ 
+                  std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                  fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("BASE32 ENCODED BEGIN"), std::string("BASE32 ENCODED END")));
+                  return -1;
+                }
+                std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                return 0;
+            }
+            fmt::print("Base32: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", output_value));
+            return 0;
+        }
+        /* >---------> Base32 Decoding <---------< */
+        else if(dec_flag) {
+            if(file_flag){
+                using namespace termcolor;
+                if(!file_data.second){
+                    std::cout << red << bold << underline << file_data.first << reset << std::endl; 
+                    return -1;
+                }
+                output_value = CONVERT::base32_decode(file_data.first);
+                if (!output_option.length() == 0){
+                  std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE32 DECODED BEGIN","BASE32 DECODED END"));
+                  if (!file_status.second){ 
+                    std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                    fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("BASE32 DECODED BEGIN"), std::string("BASE32 DECODED END")));
+                    return -1;
+                  }
+                  std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                  return 0;
+                }
+                fmt::print("Base32({}): {}\n", input_option, fmt::format(fg(fmt::color::light_green), "{}", output_value)); 
+                return 0;
+            }
+            output_value = CONVERT::base32_decode(input_option);
+            if (!output_option.length() == 0){
+                using namespace termcolor;
+                std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE32 DECODED BEGIN","BASE32 DECODED END"));
+                if (!file_status.second){ 
+                  std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                  fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("BASE32 DECODED BEGIN"), std::string("BASE32 DECODED END")));
+                  return -1;
+                }
+                std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                return 0;
+            }
+            fmt::print("Base32: {}\n", fmt::format(fg(fmt::color::light_green), "{}", output_value));
+            return 0;
+        }
+        /* >---------> Base32 Requirements <---------< */
+        else {
+            fmt::print("--encode,-e OR --decode,-d flag is required\n");
+            return -1;
+        }
+    }
+    
+    /* >---------> Base64 <---------< */
+    else if(base64_flag){
+        /* >---------> Base64 Encoding <---------< */
+        if(enc_flag) { 
+            if(file_flag){
+                using namespace termcolor;
+                if(!file_data.second){
+                    std::cout << red << bold << underline << file_data.first << reset << std::endl; 
+                    return -1;
+                }
+                output_value = CONVERT::base64_encode(file_data.first);
+                if (!output_option.length() == 0){
+                  std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE64 ENCODED BEGIN","BASE64 ENCODED END"));
+                  if (!file_status.second){ 
+                    std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                    fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("BASE64 ENCODED BEGIN"), std::string("BASE64 ENCODED END")));
+                    return -1;
+                  }
+                  std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                  return 0;
+                }
+                fmt::print("Base64({}): {}\n\n", input_option, fmt::format(fg(fmt::color::light_green), "{}", output_value)); 
+                return 0;
+            }
+            output_value = CONVERT::base64_encode(input_option);
+            if (!output_option.length() == 0){
+                using namespace termcolor;
+                std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE64 ENCODED BEGIN","BASE64 ENCODED END"));
+                if (!file_status.second){ 
+                  std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                  fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("BASE64 ENCODED BEGIN"), std::string("BASE64 ENCODED END")));
+                  return -1;
+                }
+                std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                return 0;
+            }
+            fmt::print("Base64: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", output_value));
+            return 0;
+        }
+        /* >---------> Base64 Decoding <---------< */
+        else if(dec_flag) {
+            if(file_flag){
+                using namespace termcolor;
+                if(!file_data.second){
+                    std::cout << red << bold << underline << file_data.first << reset << std::endl; 
+                    return -1;
+                }
+                output_value = CONVERT::base64_decode(file_data.first);
+                if (!output_option.length() == 0){
+                  std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE64 DECODED BEGIN","BASE64 DECODED END"));
+                  if (!file_status.second){ 
+                    std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                    fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("BASE64 DECODED BEGIN"), std::string("BASE64 DECODED END")));
+                    return -1;
+                  }
+                  std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                  return 0;
+                }
+                fmt::print("Base64({}): {}\n", input_option, fmt::format(fg(fmt::color::light_green), "{}", output_value)); 
+                return 0;
+            }
+            output_value = CONVERT::base64_decode(input_option);
+            if (!output_option.length() == 0){
+                using namespace termcolor;
+                std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE64 DECODED BEGIN","BASE64 DECODED END"));
+                if (!file_status.second){ 
+                  std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                  fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("BASE64 DECODED BEGIN"), std::string("BASE64 DECODED END")));
+                  return -1;
+                }
+                std::cout << green << bold << underline << file_status.first << reset << std::endl;
+                return 0;
+            }
+            fmt::print("Base64: {}\n", fmt::format(fg(fmt::color::light_green), "{}", output_value));
+            return 0;
+        }
+        /* >---------> Base64 Requirements <---------< */
+        else {
+            fmt::print("--encode,-e OR --decode,-d flag is required\n");
+            return -1;
+        }
+    }
+    
+    /* >---------> Caesar <---------< */
+    else if(caesar_flag){
+        /* >---------> Caesar Encoding/Decoding <---------< */
+        if(file_flag){
+            using namespace termcolor;
+            if(!file_data.second){
+                std::cout << red << bold << underline << file_data.first << reset << std::endl; 
+                return -1;
+            }
+            output_value = CONVERT::caesar(file_data.first, caesar_shift);
+            if (!output_option.length() == 0){
+              std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("CAESAR BEGIN","CAESAR END"));
+              if (!file_status.second){ 
+                std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("CAESAR BEGIN"), std::string("CAESAR END")));
+                return -1;
+              }
+              std::cout << green << bold << underline << file_status.first << reset << std::endl;
+              return 0;
+            }
+            fmt::print("Caesar({}): {}\n\n", input_option, fmt::format(fg(fmt::color::light_green), "{}", output_value));
+            return 0;
+        }
+        output_value = CONVERT::caesar(input_option, caesar_shift);
+        if (!output_option.length() == 0){
+            using namespace termcolor;
+            std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("CAESAR BEGIN","CAESAR END"));
+            if (!file_status.second){ 
+              std::cout << red << bold << underline << file_status.first << reset << std::endl;
+              fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("CAESAR BEGIN"), std::string("CAESAR END")));
+              return -1;
+            }
+            std::cout << green << bold << underline << file_status.first << reset << std::endl;
+            return 0;
+        }
+        fmt::print("Caesar: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", output_value));
+        return 0;
+    }
+    
+    /* >---------> Format Requirements <---------< */
+    else {
         fmt::print("No format specified, for more details try: convert --help\n");
         format_not_specified();
-      }
-    }
-    else {
-      using namespace termcolor;
-      std::cout << yellow << bold << underline << "File formating is not availabe at this time!" << reset << std::endl;
-      return -1;
+        return -1;
     }
   }
 
+  /* >=========> dgst command actions <=========< */
   else if(dgst_command->parsed()){
-    if(!dsgt_file_flag){
-      if(md5_flag){
-        fmt::print("md5: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", md5::MD5()(dgst_input_option)));
-      }
-      else if(sha1_flag){
-        fmt::print("sha1: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", sha1::SHA1()(dgst_input_option)));
-      }
-      else if(sha3_flag){
-        fmt::print("sha3: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", sha3::SHA3()(dgst_input_option)));
-      }
-      else if(sha256_flag){
-        fmt::print("sha256: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", sha256::SHA256()(dgst_input_option)));
-      }
-      else if(crc32_flag){
-        fmt::print("crc32: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", crc32::CRC32()(dgst_input_option)));
-      }
-      else if(keccak_flag){
-        fmt::print("keccak: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", keccak::Keccak()(dgst_input_option)));
-      }
-      else {
+    std::pair<std::string, bool> file_data = read_file(dgst_input_option); // => Stores the content of pathed file
+    
+    /* >---------> MD5 <---------< */
+    if(md5_flag){
+        if(dsgt_file_flag){
+            using namespace termcolor;
+            if(!file_data.second) {
+                std::cout << red << bold << underline << file_data.first << reset << std::endl; 
+                return -1;
+            }
+            output_value = md5::MD5()(file_data.first);
+            if (!dgst_output_option.length() == 0){
+              std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("MD5 BEGIN","MD5 END"));
+              if (!file_status.second){ 
+                std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("MD5 BEGIN"), std::string("MD5 END")));
+                return -1;
+              }
+              std::cout << green << bold << underline << file_status.first << reset << std::endl;
+              return 0;
+            }
+            fmt::print("md5({}): {}\n\n", dgst_input_option, fmt::format(fg(fmt::color::light_green), "{}", output_value));
+            return 0;
+        } 
+        output_value = md5::MD5()(dgst_input_option);
+        if (!dgst_output_option.length() == 0){
+          using namespace termcolor;
+          std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("MD5 BEGIN","MD5 END"));
+          if (!file_status.second){ 
+            std::cout << red << bold << underline << file_status.first << reset << std::endl;
+            fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("MD5 BEGIN"), std::string("MD5 END")));
+            return -1;
+          }
+          std::cout << green << bold << underline << file_status.first << reset << std::endl;
+          return 0;
+        }
+        fmt::print("md5: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", output_value));
+        return 0;
+    }
+    
+    /* >---------> SHA1 <---------< */
+    else if(sha1_flag){
+        if(dsgt_file_flag){
+            using namespace termcolor;
+            if(!file_data.second) {
+                std::cout << red << bold << underline << file_data.first << reset << std::endl; 
+                return -1;
+            }
+            output_value = sha1::SHA1()(file_data.first);
+            if (!dgst_output_option.length() == 0){
+              std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("SHA1 BEGIN","SHA1 END"));
+              if (!file_status.second){ 
+                std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("SHA1 BEGIN"), std::string("SHA1 END")));
+                return -1;
+              }
+              std::cout << green << bold << underline << file_status.first << reset << std::endl;
+              return 0;
+            }
+            fmt::print("sha1({}): {}\n\n", dgst_input_option, fmt::format(fg(fmt::color::light_green), "{}", output_value));
+            return 0;
+        } 
+        output_value = sha1::SHA1()(dgst_input_option);
+        if (!dgst_output_option.length() == 0){
+          using namespace termcolor;
+          std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("SHA1 BEGIN","SHA1 END"));
+          if (!file_status.second){ 
+            std::cout << red << bold << underline << file_status.first << reset << std::endl;
+            fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("SHA1 BEGIN"), std::string("SHA1 END")));
+            return -1;
+          }
+          std::cout << green << bold << underline << file_status.first << reset << std::endl;
+          return 0;
+        }
+        fmt::print("sha1: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", output_value));
+        return 0;
+    }
+    
+    /* >---------> SHA3 <---------< */
+    else if(sha3_flag){
+        if(dsgt_file_flag){
+            using namespace termcolor;
+            if(!file_data.second) {
+                std::cout << red << bold << underline << file_data.first << reset << std::endl; 
+                return -1;
+            }
+            output_value = sha3::SHA3()(file_data.first);
+            if (!dgst_output_option.length() == 0){
+              std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("SHA3 BEGIN","SHA3 END"));
+              if (!file_status.second){ 
+                std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("SHA3 BEGIN"), std::string("SHA3 END")));
+                return -1;
+              }
+              std::cout << green << bold << underline << file_status.first << reset << std::endl;
+              return 0;
+            }
+            fmt::print("sha3({}): {}\n\n", dgst_input_option, fmt::format(fg(fmt::color::light_green), "{}", output_value));
+            return 0;
+        } 
+        output_value = sha3::SHA3()(dgst_input_option);
+        if (!dgst_output_option.length() == 0){
+          using namespace termcolor;
+          std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("SHA3 BEGIN","SHA3 END"));
+          if (!file_status.second){ 
+            std::cout << red << bold << underline << file_status.first << reset << std::endl;
+            fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("SHA3 BEGIN"), std::string("SHA3 END")));
+            return -1;
+          }
+          std::cout << green << bold << underline << file_status.first << reset << std::endl;
+          return 0;
+        }
+        fmt::print("sha3: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", output_value));
+        return 0;
+    }
+    
+    /* >---------> SHA256 <---------< */
+    else if(sha256_flag){
+        if(dsgt_file_flag){
+            using namespace termcolor;
+            if(!file_data.second) {
+                std::cout << red << bold << underline << file_data.first << reset << std::endl; 
+                return -1;
+            }
+            output_value = sha256::SHA256()(file_data.first);
+            if (!dgst_output_option.length() == 0){
+              std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("SHA256 BEGIN","SHA256 END"));
+              if (!file_status.second){ 
+                std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("SHA256 BEGIN"), std::string("SHA256 END")));
+                return -1;
+              }
+              std::cout << green << bold << underline << file_status.first << reset << std::endl;
+              return 0;
+            }
+            fmt::print("sha256({}): {}\n\n", dgst_input_option, fmt::format(fg(fmt::color::light_green), "{}", output_value));
+            return 0;
+        } 
+        output_value = sha256::SHA256()(dgst_input_option);
+        if (!dgst_output_option.length() == 0){
+          using namespace termcolor;
+          std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("SHA256 BEGIN","SHA256 END"));
+          if (!file_status.second){ 
+            std::cout << red << bold << underline << file_status.first << reset << std::endl;
+            fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("SHA256 BEGIN"), std::string("SHA256 END")));
+            return -1;
+          }
+          std::cout << green << bold << underline << file_status.first << reset << std::endl;
+          return 0;
+        }
+        fmt::print("sha256: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", output_value));
+        return 0;
+    }
+    
+    /* >---------> CRC32 <---------< */
+    else if(crc32_flag){
+        if(dsgt_file_flag){
+            using namespace termcolor;
+            if(!file_data.second) {
+                std::cout << red << bold << underline << file_data.first << reset << std::endl; 
+                return -1;
+            }
+            output_value = crc32::CRC32()(file_data.first);
+            if (!dgst_output_option.length() == 0){
+              std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("CRC32 BEGIN","CRC32 END"));
+              if (!file_status.second){ 
+                std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("CRC32 BEGIN"), std::string("CRC32 END")));
+                return -1;
+              }
+              std::cout << green << bold << underline << file_status.first << reset << std::endl;
+              return 0;
+            }
+            fmt::print("crc32({}): {}\n\n", dgst_input_option, fmt::format(fg(fmt::color::light_green), "{}", output_value));
+            return 0;
+        } 
+        output_value = crc32::CRC32()(dgst_input_option);
+        if (!dgst_output_option.length() == 0){
+          using namespace termcolor;
+          std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("CRC32 BEGIN","CRC32 END"));
+          if (!file_status.second){ 
+            std::cout << red << bold << underline << file_status.first << reset << std::endl;
+            fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("CRC32 BEGIN"), std::string("CRC32 END")));
+            return -1;
+          }
+          std::cout << green << bold << underline << file_status.first << reset << std::endl;
+          return 0;
+        }
+        fmt::print("crc32: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", output_value));
+        return 0;
+    }
+    
+    /* >---------> Keccak <---------< */
+    else if(keccak_flag){
+        if(dsgt_file_flag){
+            using namespace termcolor;
+            if(!file_data.second) {
+                std::cout << red << bold << underline << file_data.first << reset << std::endl; 
+                return -1;
+            }
+            output_value = keccak::Keccak()(file_data.first);
+            if (!dgst_output_option.length() == 0){
+              std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("KECCAK BEGIN","KECCAK END"));
+              if (!file_status.second){ 
+                std::cout << red << bold << underline << file_status.first << reset << std::endl;
+                fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("KECCAK BEGIN"), std::string("KECCAK END")));
+                return -1;
+              }
+              std::cout << green << bold << underline << file_status.first << reset << std::endl;
+              return 0;
+            }
+            fmt::print("keccak({}): {}\n\n", dgst_input_option, fmt::format(fg(fmt::color::light_green), "{}", output_value));
+            return 0;
+        } 
+        output_value = keccak::Keccak()(dgst_input_option);
+        if (!dgst_output_option.length() == 0){
+          using namespace termcolor;
+          std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("KECCAK BEGIN","KECCAK END"));
+          if (!file_status.second){ 
+            std::cout << red << bold << underline << file_status.first << reset << std::endl;
+            fmt::println("\n{}\n",BorderFormatter::format(output_value, 50, '=', std::string("KECCAK BEGIN"), std::string("KECCAK END")));
+            return -1;
+          }
+          std::cout << green << bold << underline << file_status.first << reset << std::endl;
+          return 0;
+        }
+        fmt::print("keccak: {}\n\n", fmt::format(fg(fmt::color::light_green), "{}", output_value));
+        return 0;
+    }
+    
+    /* >---------> HASH Requirements <---------< */
+    else {
         fmt::print("No HASH algorithm specified, for more details try: dgst --help\n");
         hash_not_specified();
-      }
+        return -1;
     }
-    else {
-      using namespace termcolor;
-      std::cout << yellow << bold << underline << "File hashing is not availabe at this time!" << reset << std::endl;
-      return -1;
-
-    }
-  }
+  }  
+  /* >=========> Other subcommands Requirements <=========< */
   else {
     using namespace termcolor;
     std::cout << red << bold << "No [COMMAND]/[OPTION] specified, for more details try:" << reset << " enc --help\n" << reset << std::endl;
