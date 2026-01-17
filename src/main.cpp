@@ -91,7 +91,7 @@ int main (int argc, char ** argv){
                     return -1;
                 }
                 output_value = CONVERT::binary_encode(file_data.first);
-                if (!output_option.length() == 0){
+                if (!output_option.empty()){
                   std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BINARY ENCODED BEGIN","BINARY ENCODED END"));
                   if (!file_status.second){ 
                     std::cout << red << bold << underline << file_status.first << reset << std::endl;
@@ -105,7 +105,7 @@ int main (int argc, char ** argv){
                 return 0;
             }
             output_value = CONVERT::binary_encode(input_option);
-            if (!output_option.length() == 0){
+            if (!output_option.empty()){
                 using namespace termcolor;
                 std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BINARY ENCODED BEGIN","BINARY ENCODED END"));
                 if (!file_status.second){ 
@@ -128,7 +128,7 @@ int main (int argc, char ** argv){
                     return -1;
                 }
                 output_value = CONVERT::binary_decode(file_data.first);
-                if (!output_option.length() == 0){
+                if (!output_option.empty()){
                   std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BINARY DECODED BEGIN","BINARY DECODED END"));
                   if (!file_status.second){ 
                     std::cout << red << bold << underline << file_status.first << reset << std::endl;
@@ -142,7 +142,7 @@ int main (int argc, char ** argv){
                 return 0;
             }
             output_value = CONVERT::binary_decode(input_option);
-            if (!output_option.length() == 0){
+            if (!output_option.empty()){
                 using namespace termcolor;
                 std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BINARY DECODED BEGIN","BINARY DECODED END"));
                 if (!file_status.second){ 
@@ -174,7 +174,7 @@ int main (int argc, char ** argv){
                     return -1;
                 }
                 output_value = CONVERT::hex_encode(file_data.first);
-                if (!output_option.length() == 0){
+                if (!output_option.empty()){
                   std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("HEX ENCODED BEGIN","HEX ENCODED END"));
                   if (!file_status.second){ 
                     std::cout << red << bold << underline << file_status.first << reset << std::endl;
@@ -188,7 +188,7 @@ int main (int argc, char ** argv){
                 return 0;
             }
             output_value = CONVERT::hex_encode(input_option);
-            if (!output_option.length() == 0){
+            if (!output_option.empty()){
                 using namespace termcolor;
                 std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("HEX ENCODED BEGIN","HEX ENCODED END"));
                 if (!file_status.second){ 
@@ -211,7 +211,7 @@ int main (int argc, char ** argv){
                     return -1;
                 }
                 output_value = CONVERT::hex_decode(file_data.first);
-                if (!output_option.length() == 0){
+                if (!output_option.empty()){
                   std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("HEX DECODED BEGIN","HEX DECODED END"));
                   if (!file_status.second){ 
                     std::cout << red << bold << underline << file_status.first << reset << std::endl;
@@ -225,7 +225,7 @@ int main (int argc, char ** argv){
                 return 0;
             }
             output_value = CONVERT::hex_decode(input_option);
-            if (!output_option.length() == 0){
+            if (!output_option.empty()){
                 using namespace termcolor;
                 std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("HEX DECODED BEGIN","HEX DECODED END"));
                 if (!file_status.second){ 
@@ -257,7 +257,7 @@ int main (int argc, char ** argv){
                     return -1;
                 }
                 output_value = CONVERT::base32_encode(file_data.first);
-                if (!output_option.length() == 0){
+                if (!output_option.empty()){
                   std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE32 ENCODED BEGIN","BASE32 ENCODED END"));
                   if (!file_status.second){ 
                     std::cout << red << bold << underline << file_status.first << reset << std::endl;
@@ -271,7 +271,7 @@ int main (int argc, char ** argv){
                 return 0;
             }
             output_value = CONVERT::base32_encode(input_option);
-            if (!output_option.length() == 0){
+            if (!output_option.empty()){
                 using namespace termcolor;
                 std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE32 ENCODED BEGIN","BASE32 ENCODED END"));
                 if (!file_status.second){ 
@@ -294,7 +294,7 @@ int main (int argc, char ** argv){
                     return -1;
                 }
                 output_value = CONVERT::base32_decode(file_data.first);
-                if (!output_option.length() == 0){
+                if (!output_option.empty()){
                   std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE32 DECODED BEGIN","BASE32 DECODED END"));
                   if (!file_status.second){ 
                     std::cout << red << bold << underline << file_status.first << reset << std::endl;
@@ -308,7 +308,7 @@ int main (int argc, char ** argv){
                 return 0;
             }
             output_value = CONVERT::base32_decode(input_option);
-            if (!output_option.length() == 0){
+            if (!output_option.empty()){
                 using namespace termcolor;
                 std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE32 DECODED BEGIN","BASE32 DECODED END"));
                 if (!file_status.second){ 
@@ -340,7 +340,7 @@ int main (int argc, char ** argv){
                     return -1;
                 }
                 output_value = CONVERT::base64_encode(file_data.first);
-                if (!output_option.length() == 0){
+                if (!output_option.empty()){
                   std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE64 ENCODED BEGIN","BASE64 ENCODED END"));
                   if (!file_status.second){ 
                     std::cout << red << bold << underline << file_status.first << reset << std::endl;
@@ -354,7 +354,7 @@ int main (int argc, char ** argv){
                 return 0;
             }
             output_value = CONVERT::base64_encode(input_option);
-            if (!output_option.length() == 0){
+            if (!output_option.empty()){
                 using namespace termcolor;
                 std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE64 ENCODED BEGIN","BASE64 ENCODED END"));
                 if (!file_status.second){ 
@@ -377,7 +377,7 @@ int main (int argc, char ** argv){
                     return -1;
                 }
                 output_value = CONVERT::base64_decode(file_data.first);
-                if (!output_option.length() == 0){
+                if (!output_option.empty()){
                   std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE64 DECODED BEGIN","BASE64 DECODED END"));
                   if (!file_status.second){ 
                     std::cout << red << bold << underline << file_status.first << reset << std::endl;
@@ -391,7 +391,7 @@ int main (int argc, char ** argv){
                 return 0;
             }
             output_value = CONVERT::base64_decode(input_option);
-            if (!output_option.length() == 0){
+            if (!output_option.empty()){
                 using namespace termcolor;
                 std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("BASE64 DECODED BEGIN","BASE64 DECODED END"));
                 if (!file_status.second){ 
@@ -422,7 +422,7 @@ int main (int argc, char ** argv){
                 return -1;
             }
             output_value = CONVERT::caesar(file_data.first, caesar_shift);
-            if (!output_option.length() == 0){
+            if (!output_option.empty()){
               std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("CAESAR BEGIN","CAESAR END"));
               if (!file_status.second){ 
                 std::cout << red << bold << underline << file_status.first << reset << std::endl;
@@ -436,7 +436,7 @@ int main (int argc, char ** argv){
             return 0;
         }
         output_value = CONVERT::caesar(input_option, caesar_shift);
-        if (!output_option.length() == 0){
+        if (!output_option.empty()){
             using namespace termcolor;
             std::pair<std::string, bool> file_status = write_file(output_option, output_value, std::pair<std::string, std::string>("CAESAR BEGIN","CAESAR END"));
             if (!file_status.second){ 
@@ -472,7 +472,7 @@ int main (int argc, char ** argv){
                 return -1;
             }
             output_value = md5::MD5()(file_data.first);
-            if (!dgst_output_option.length() == 0){
+            if (!dgst_output_option.empty()){
               std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("MD5 BEGIN","MD5 END"));
               if (!file_status.second){ 
                 std::cout << red << bold << underline << file_status.first << reset << std::endl;
@@ -486,7 +486,7 @@ int main (int argc, char ** argv){
             return 0;
         } 
         output_value = md5::MD5()(dgst_input_option);
-        if (!dgst_output_option.length() == 0){
+        if (!dgst_output_option.empty()){
           using namespace termcolor;
           std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("MD5 BEGIN","MD5 END"));
           if (!file_status.second){ 
@@ -510,7 +510,7 @@ int main (int argc, char ** argv){
                 return -1;
             }
             output_value = sha1::SHA1()(file_data.first);
-            if (!dgst_output_option.length() == 0){
+            if (!dgst_output_option.empty()){
               std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("SHA1 BEGIN","SHA1 END"));
               if (!file_status.second){ 
                 std::cout << red << bold << underline << file_status.first << reset << std::endl;
@@ -524,7 +524,7 @@ int main (int argc, char ** argv){
             return 0;
         } 
         output_value = sha1::SHA1()(dgst_input_option);
-        if (!dgst_output_option.length() == 0){
+        if (!dgst_output_option.empty()){
           using namespace termcolor;
           std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("SHA1 BEGIN","SHA1 END"));
           if (!file_status.second){ 
@@ -548,7 +548,7 @@ int main (int argc, char ** argv){
                 return -1;
             }
             output_value = sha3::SHA3()(file_data.first);
-            if (!dgst_output_option.length() == 0){
+            if (!dgst_output_option.empty()){
               std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("SHA3 BEGIN","SHA3 END"));
               if (!file_status.second){ 
                 std::cout << red << bold << underline << file_status.first << reset << std::endl;
@@ -562,7 +562,7 @@ int main (int argc, char ** argv){
             return 0;
         } 
         output_value = sha3::SHA3()(dgst_input_option);
-        if (!dgst_output_option.length() == 0){
+        if (!dgst_output_option.empty()){
           using namespace termcolor;
           std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("SHA3 BEGIN","SHA3 END"));
           if (!file_status.second){ 
@@ -586,7 +586,7 @@ int main (int argc, char ** argv){
                 return -1;
             }
             output_value = sha256::SHA256()(file_data.first);
-            if (!dgst_output_option.length() == 0){
+            if (!dgst_output_option.empty()){
               std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("SHA256 BEGIN","SHA256 END"));
               if (!file_status.second){ 
                 std::cout << red << bold << underline << file_status.first << reset << std::endl;
@@ -600,7 +600,7 @@ int main (int argc, char ** argv){
             return 0;
         } 
         output_value = sha256::SHA256()(dgst_input_option);
-        if (!dgst_output_option.length() == 0){
+        if (!dgst_output_option.empty()){
           using namespace termcolor;
           std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("SHA256 BEGIN","SHA256 END"));
           if (!file_status.second){ 
@@ -624,7 +624,7 @@ int main (int argc, char ** argv){
                 return -1;
             }
             output_value = crc32::CRC32()(file_data.first);
-            if (!dgst_output_option.length() == 0){
+            if (!dgst_output_option.empty()){
               std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("CRC32 BEGIN","CRC32 END"));
               if (!file_status.second){ 
                 std::cout << red << bold << underline << file_status.first << reset << std::endl;
@@ -638,7 +638,7 @@ int main (int argc, char ** argv){
             return 0;
         } 
         output_value = crc32::CRC32()(dgst_input_option);
-        if (!dgst_output_option.length() == 0){
+        if (!dgst_output_option.empty()){
           using namespace termcolor;
           std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("CRC32 BEGIN","CRC32 END"));
           if (!file_status.second){ 
@@ -662,7 +662,7 @@ int main (int argc, char ** argv){
                 return -1;
             }
             output_value = keccak::Keccak()(file_data.first);
-            if (!dgst_output_option.length() == 0){
+            if (!dgst_output_option.empty()){
               std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("KECCAK BEGIN","KECCAK END"));
               if (!file_status.second){ 
                 std::cout << red << bold << underline << file_status.first << reset << std::endl;
@@ -676,7 +676,7 @@ int main (int argc, char ** argv){
             return 0;
         } 
         output_value = keccak::Keccak()(dgst_input_option);
-        if (!dgst_output_option.length() == 0){
+        if (!dgst_output_option.empty()){
           using namespace termcolor;
           std::pair<std::string, bool> file_status = write_file(dgst_output_option, output_value, std::pair<std::string, std::string>("KECCAK BEGIN","KECCAK END"));
           if (!file_status.second){ 
@@ -697,7 +697,7 @@ int main (int argc, char ** argv){
         hash_not_specified();
         return -1;
     }
-  }  
+  } 
   /* >=========> Other subcommands Requirements <=========< */
   else {
     using namespace termcolor;
