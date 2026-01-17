@@ -148,7 +148,7 @@ This project was created by [NinjaTech404][author-link] using modern C++ practic
 [issues-link]: https://github.com/NinjaTech404/enc/issues
 [license-link]: https://github.com/NinjaTech404/enc/blob/main/LICENSE
 [platform-link]: https://github.com/NinjaTech404/enc
-[release-link]: https://github.com/NinjaTech404/enc/releases/latest
+[release-link]: https://github.com/NinjaTech404/enc/releases/tag/v2.0.0
 [stars-link]: https://github.com/NinjaTech404/enc/stargazers
 [wiki-link]: https://github.com/NinjaTech404/enc/wiki
 
