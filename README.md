@@ -2,7 +2,7 @@
 
   [![ENC][enc-logo]][github-link]
 
-  <h3>ENC</h3>
+  <h3>ENC 2.0.0v</h3>
 
   C++ CLI encoder/decoder for daily use.
   <br>
@@ -15,11 +15,16 @@
   ·
   [GitHub][github-link]
 
-  [![Build][build-badge]][build-link]
-  [![License][license-badge]][license-link]
-  <br>
-  [![Release][release-badge]][release-link]
-  [![Commits][commits-badge]][commits-link]
+
+[![Build Status](https://img.shields.io/github/actions/workflow/status/NinjaTech404/enc/ci.yml?branch=main&logo=github&label=build)](https://github.com/NinjaTech404/enc/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/github/v/release/NinjaTech404/enc?logo=github&label=release)](https://github.com/NinjaTech404/enc/releases)
+[![C++ Standard](https://img.shields.io/badge/C%2B%2B-20-blue.svg?logo=c%2B%2B&logoColor=white)](https://en.cppreference.com/w/cpp/20)
+[![CMake Version](https://img.shields.io/badge/CMake-3.10+-064F8C.svg?logo=cmake&logoColor=white)](https://cmake.org)
+[![Platform](https://img.shields.io/badge/Platform-Unix%2FLinux-lightgrey.svg?logo=linux)](https://github.com/NinjaTech404/enc)
+[![Last Commit](https://img.shields.io/github/last-commit/NinjaTech404/enc/main?logo=git)](https://github.com/NinjaTech404/enc/commits/main)
+
+...
 
 </div>
 
